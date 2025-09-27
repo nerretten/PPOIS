@@ -15,7 +15,7 @@ public:
     }
     Set(const string& s){
         if(s.empty() || s[0] != '{' || s[s.size()-1] != '}')
-            throw invalid_argument("1The format of string is incorrect\n");
+            throw invalid_argument("The format of string is incorrect\n");
         int lst = 0, cnt_open = 0, cnt_close = 0, pos_open = -1;
         for(int i = 0; i < s.size(); i++){
             if(s[i] == '{')
@@ -23,11 +23,11 @@ public:
             if(s[i] == '}')
                 cnt_close++;
             if(cnt_close > cnt_open){
-                throw invalid_argument("2The format of string is incorrect\n");
+                throw invalid_argument("The format of string is incorrect\n");
             }
         }
         if(cnt_open != cnt_close){
-            throw invalid_argument("3The format of string is incorrect\n");
+            throw invalid_argument("The format of string is incorrect\n");
         }
         cnt_open = 0;
         cnt_close = 0;
@@ -41,7 +41,7 @@ public:
         for(int i = 1; i < new_s.size(); i++){
             if(new_s[i] == ',' && cnt_open == 0){
                 if(i == lst+1){
-                    throw invalid_argument("4The format of string is incorrect\n");
+                    throw invalid_argument("The format of string is incorrect\n");
                 }
                 string temp_str = new_s.substr(lst+1, i-lst-1);
                 this->add_element(temp_str);
@@ -232,6 +232,7 @@ public:
     }
 
     friend ostream& operator<<(ostream& os, const Set& s);
+    friend istream& operator>>(istream& os, Set& s);
 
     Set boolean() const{
         Set result;
@@ -267,13 +268,17 @@ ostream& operator<<(ostream& os, const Set& s){
         cout << x;
     }
     cout << "}";
-    return  os;
+    return os;
 }
 
-int main() {
-    string s;
-    getline(cin, s);
-    Set example = Set(s);
-    cout << example;
+istream& operator>>(istream& is, Set& s){
+    string str;
+    getline(is, str);
+    try {
+        s = Set(str);
+    }catch (const invalid_argument& e){
+        is.setstate(ios::failbit);
+    }
+    return is;
 }
-//{a, b, {b, {c}}, {}}
+
