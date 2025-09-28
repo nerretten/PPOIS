@@ -70,6 +70,7 @@ public:
             }
         }
     }
+    Set(const char* str) : Set(string(str)){}
     bool is_empty() const{
         return items.empty() && subsets.empty();
     }
