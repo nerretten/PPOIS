@@ -144,6 +144,10 @@ public:
                 subsets.size() == set.subsets.size());
     }
 
+    bool operator !=(const Set& set) const{
+        return !(set==(*this));
+    }
+
 
     Set operator +(const Set& set) const{
         Set result;
