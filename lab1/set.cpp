@@ -1,21 +1,9 @@
-#include <iostream>
-#include <vector>
-#include <string>
+#include "set.h"
 
-using namespace std;
-
-class Set{
-private:
-    vector <string> items;
-    vector <Set> subsets;
-
-public:
-    Set(){
-
-    }
-    Set(const string& s){
+Set::Set() = default;
+Set::Set(const std::string& s){
         if(s.empty() || s[0] != '{' || s[s.size()-1] != '}')
-            throw invalid_argument("The format of string is incorrect\n");
+            throw std::invalid_argument("The format of string is incorrect\n");
         int lst = 0, cnt_open = 0, cnt_close = 0, pos_open = -1;
         for(int i = 0; i < s.size(); i++){
             if(s[i] == '{')
@@ -23,15 +11,15 @@ public:
             if(s[i] == '}')
                 cnt_close++;
             if(cnt_close > cnt_open){
-                throw invalid_argument("The format of string is incorrect\n");
+                throw std::invalid_argument("The format of string is incorrect\n");
             }
         }
         if(cnt_open != cnt_close){
-            throw invalid_argument("The format of string is incorrect\n");
+            throw std::invalid_argument("The format of string is incorrect\n");
         }
         cnt_open = 0;
         cnt_close = 0;
-        string new_s = s;
+        std::string new_s = s;
         auto bgn = remove(new_s.begin(), new_s.end(), ' ');
         new_s.erase(bgn, new_s.end());
         if(new_s.size() == 2){
@@ -41,9 +29,9 @@ public:
         for(int i = 1; i < new_s.size(); i++){
             if(new_s[i] == ',' && cnt_open == 0){
                 if(i == lst+1){
-                    throw invalid_argument("The format of string is incorrect\n");
+                    throw std::invalid_argument("The format of string is incorrect\n");
                 }
-                string temp_str = new_s.substr(lst+1, i-lst-1);
+                std::string temp_str = new_s.substr(lst+1, i-lst-1);
                 this->add_element(temp_str);
                 lst=i;
             }
@@ -59,7 +47,7 @@ public:
                         this->add_element(Set());
                     }
                     else{
-                        string temp_str = new_s.substr(pos_open+1, i-pos_open-1);
+                        std::string temp_str = new_s.substr(pos_open+1, i-pos_open-1);
                         this->add_element(Set("{"+temp_str+"}"));
                     }
                     pos_open = -1;
@@ -69,14 +57,15 @@ public:
                 }
             }
         }
-    }
-    Set(const char* str) : Set(string(str)){}
-    bool is_empty() const{
+}
+Set::Set(const char* str) : Set(std::string(str)){}
+
+bool Set::is_empty() const{
         return items.empty() && subsets.empty();
     }
-    bool operator[](const string& s) const{
+bool Set::operator[](const std::string& s) const{
         bool flag = false;
-        for(string x: items){
+        for(std::string x: items){
             if(x == s){
                 flag = true;
                 break;
@@ -84,8 +73,7 @@ public:
         }
         return flag;
     }
-
-    bool operator[](const Set& s) const{
+bool Set::operator[](const Set& s) const{
         bool flag = false;
         for(Set x: subsets){
             if(x == s){
@@ -95,15 +83,15 @@ public:
         }
         return flag;
     }
-    void add_element(const string &s){
+void Set::add_element(const std::string &s){
          if(!(*this)[s])
              items.push_back(s);
     }
-    void add_element(const Set& s){
+void Set::add_element(const Set& s){
         if(!(*this)[s])
             subsets.push_back(s);
     }
-    void delete_element(const string& s){
+void Set::delete_element(const std::string& s){
         for(int i = 0; i < items.size(); i++){
             if(items[i] == s){
                 items.erase(items.begin() + i);
@@ -111,21 +99,21 @@ public:
             }
         }
     }
-    void delete_element(const Set& set){
+void Set::delete_element(const Set& set){
         for(int i = 0; i < subsets.size(); i++){
             if(subsets[i] == set){
                 subsets.erase(subsets.begin()+i);
             }
         }
     }
-    int power(){
+int Set::power() const{
         return items.size()+subsets.size();
     }
 
-    bool operator ==(const Set& set) const{
+bool Set::operator ==(const Set& set) const{
         int cnt = 0;
-        for(string s1: items){
-            for(string s2: set.items){
+        for(std::string s1: items){
+            for(std::string s2: set.items){
                 if(s1 == s2){
                     cnt++;
                     break;
@@ -143,18 +131,17 @@ public:
         return ((items.size()+subsets.size()) == cnt && items.size()==set.items.size() &&
                 subsets.size() == set.subsets.size());
     }
-
-    bool operator !=(const Set& set) const{
+bool Set::operator !=(const Set& set) const{
         return !(set==(*this));
     }
 
 
-    Set operator +(const Set& set) const{
+Set Set::operator +(const Set& set) const{
         Set result;
-        for(string s: items){
+        for(std::string s: items){
             result.add_element(s);
         }
-        for(string s: set.items){
+        for(std::string s: set.items){
             result.add_element(s);
         }
         for(Set s: subsets){
@@ -165,9 +152,8 @@ public:
         }
         return result;
     }
-
-    Set& operator +=(const Set& set){
-        for(string s: set.items){
+Set& Set::operator +=(const Set& set){
+        for(std::string s: set.items){
             this->add_element(s);
         }
         for(Set s: set.subsets){
@@ -176,9 +162,9 @@ public:
         return *this;
     }
 
-    Set operator -(const Set& set){
+Set Set::operator -(const Set& set){
         Set result;
-        for(string s: items){
+        for(std::string s: items){
             if(!set[s])
                 result.items.push_back(s);
         }
@@ -190,9 +176,8 @@ public:
 
         return result;
     }
-
-    Set& operator -=(const Set& set){
-        for(string s: items){
+Set& Set::operator -=(const Set& set){
+        for(std::string s: items){
             if(set[s]){
                 this->delete_element(s);
             }
@@ -206,9 +191,9 @@ public:
         return *this;
     }
 
-    Set operator *(const Set& set) const{
+Set Set::operator *(const Set& set) const{
         Set result;
-        for(string s: items){
+        for(std::string s: items){
             if(set[s])
                 result.items.push_back(s);
         }
@@ -220,9 +205,8 @@ public:
 
         return result;
     }
-
-    Set& operator *=(const Set& set){
-        for(string s: items){
+Set& Set::operator *=(const Set& set){
+        for(std::string s: items){
             if(!set[s]){
                 this->delete_element(s);
             }
@@ -236,13 +220,10 @@ public:
         return *this;
     }
 
-    friend ostream& operator<<(ostream& os, const Set& s);
-    friend istream& operator>>(istream& os, Set& s);
-
-    Set boolean() const{
+Set Set::boolean() const{
         Set result;
         result.subsets.push_back(Set());
-        for(string s: items){
+        for(std::string s: items){
             int sz = result.subsets.size();
             Set temp_set;
             temp_set.add_element(s);
@@ -252,37 +233,42 @@ public:
         }
         for(Set s: subsets){
             int sz = result.subsets.size();
-            for(int i = 0; i < sz; i++){
-                result.add_element(s+result.subsets[i]);
+            Set temp_set;
+            temp_set.add_element(s);
+            result.add_element(s);
+            for(int i = 1; i < sz; i++){
+                temp_set.add_element(result.subsets[i]);
+                result.add_element(temp_set);
             }
         }
 
         return result;
     }
 
-};
 
-ostream& operator<<(ostream& os, const Set& s){
-    cout << "{";
+std::ostream& operator<<(std::ostream& os, const Set& s){
+    std::cout << "{";
     for(int i = 0; i < s.items.size(); i++){
-        cout << s.items[i];
+        std::cout << s.items[i];
         if(i != s.items.size()-1 || !s.subsets.empty())
-            cout << ", ";
+            std::cout << ", ";
     }
-    for(Set x: s.subsets){
-        cout << x;
+    for(int i = 0; i < s.subsets.size(); i++){
+        std::cout << s.subsets[i];
+        if(i != s.items.size()-1 || !s.subsets.empty())
+            std::cout << ", ";
     }
-    cout << "}";
+    std::cout << "}";
     return os;
 }
 
-istream& operator>>(istream& is, Set& s){
-    string str;
+std::istream& operator>>(std::istream& is, Set& s){
+    std::string str;
     getline(is, str);
     try {
         s = Set(str);
-    }catch (const invalid_argument& e){
-        is.setstate(ios::failbit);
+    }catch (const std::invalid_argument& e){
+        is.setstate(std::ios::failbit);
     }
     return is;
 }
