@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+bool is_balanced_braces(const std::string&s);
+
 class Set{
 private:
     std::vector <std::string> items;
@@ -13,7 +15,7 @@ private:
 public:
     Set();
     Set(const std::string& s);
-    Set(const char* str);
+    explicit Set(const char* str);
 
     bool is_empty() const;
 

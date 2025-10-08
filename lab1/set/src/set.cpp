@@ -1,35 +1,38 @@
 #include "set.h"
 
+bool is_balanced_braces(const std::string&s) {
+    int cnt_open = 0, cnt_close=0;
+    for(int i = 0; i < s.size(); i++){
+        if(s[i] == '{')
+            cnt_open++;
+        if(s[i] == '}')
+            cnt_close++;
+        if(cnt_close > cnt_open){
+            return false;
+        }
+    }
+    if(cnt_open != cnt_close){
+        return false;
+    }
+    return true;
+}
+
 Set::Set() = default;
 Set::Set(const std::string& s){
-        if(s.empty() || s[0] != '{' || s[s.size()-1] != '}')
-            throw std::invalid_argument("The format of string is incorrect\n");
-        int lst = 0, cnt_open = 0, cnt_close = 0, pos_open = -1;
-        for(int i = 0; i < s.size(); i++){
-            if(s[i] == '{')
-                cnt_open++;
-            if(s[i] == '}')
-                cnt_close++;
-            if(cnt_close > cnt_open){
-                throw std::invalid_argument("The format of string is incorrect\n");
-            }
-        }
-        if(cnt_open != cnt_close){
-            throw std::invalid_argument("The format of string is incorrect\n");
-        }
-        cnt_open = 0;
-        cnt_close = 0;
+        if(s.empty() || s[0] != '{' || s[s.size()-1] != '}' || !is_balanced_braces(s))
+            throw std::invalid_argument("Неверный формат строки\n");
         std::string new_s = s;
         auto bgn = remove(new_s.begin(), new_s.end(), ' ');
         new_s.erase(bgn, new_s.end());
         if(new_s.size() == 2){
             return;
         }
+        int lst = 0, cnt_open = 0, cnt_close = 0, pos_open = -1;
         new_s[new_s.size()-1] =',';
         for(int i = 1; i < new_s.size(); i++){
             if(new_s[i] == ',' && cnt_open == 0){
                 if(i == lst+1){
-                    throw std::invalid_argument("The format of string is incorrect\n");
+                    throw std::invalid_argument("Неверный формат строки\n");
                 }
                 std::string temp_str = new_s.substr(lst+1, i-lst-1);
                 this->add_element(temp_str);
@@ -58,6 +61,7 @@ Set::Set(const std::string& s){
             }
         }
 }
+
 Set::Set(const char* str) : Set(std::string(str)){}
 
 bool Set::is_empty() const{
@@ -206,23 +210,14 @@ Set Set::operator *(const Set& set) const{
         return result;
     }
 Set& Set::operator *=(const Set& set){
-        for(std::string s: items){
-            if(!set[s]){
-                this->delete_element(s);
-            }
-        }
-        for(Set s: subsets){
-            if(!set[s]){
-                this->delete_element(s);
-            }
-        }
-
-        return *this;
+    *this = *this * set;
+    return *this;
     }
 
 Set Set::boolean() const{
         Set result;
         result.subsets.push_back(Set());
+
         for(std::string s: items){
             int sz = result.subsets.size();
             Set temp_set;
@@ -235,10 +230,8 @@ Set Set::boolean() const{
             int sz = result.subsets.size();
             Set temp_set;
             temp_set.add_element(s);
-            result.add_element(s);
-            for(int i = 1; i < sz; i++){
-                temp_set.add_element(result.subsets[i]);
-                result.add_element(temp_set);
+            for(int i = 0; i < sz; i++){
+                result.add_element(temp_set+result.subsets[i]);
             }
         }
 
@@ -247,18 +240,18 @@ Set Set::boolean() const{
 
 
 std::ostream& operator<<(std::ostream& os, const Set& s){
-    std::cout << "{";
+    os << "{";
     for(int i = 0; i < s.items.size(); i++){
-        std::cout << s.items[i];
+        os << s.items[i];
         if(i != s.items.size()-1 || !s.subsets.empty())
-            std::cout << ", ";
+            os << ", ";
     }
     for(int i = 0; i < s.subsets.size(); i++){
-        std::cout << s.subsets[i];
-        if(i != s.items.size()-1 || !s.subsets.empty())
-            std::cout << ", ";
+        os << s.subsets[i];
+        if(i != s.subsets.size()-1)
+            os<< ", ";
     }
-    std::cout << "}";
+    os << "}";
     return os;
 }
 
