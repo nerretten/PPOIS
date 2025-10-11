@@ -1,4 +1,5 @@
 #include "set.h"
+#include <stdexcept>
 
 bool is_balanced_braces(const std::string&s) {
     int cnt_open = 0, cnt_close=0;
@@ -16,7 +17,41 @@ bool is_balanced_braces(const std::string&s) {
     }
     return true;
 }
-
+void check_comma(int& lst, Set &s, const std::string& new_s, int i, int cnt_open){
+    if(new_s[i] == ',' && cnt_open == 0){
+        if(i == lst+1){
+            throw std::invalid_argument("Неверный формат строки\n");
+        }
+        std::string temp_str = new_s.substr(lst+1, i-lst-1);
+        s.add_element(temp_str);
+        lst=i;
+    }
+}
+void check_open_brace(const std::string& new_s, int i, int& cnt_open, int &pos_open){
+    if(new_s[i] == '{'){
+        cnt_open++;
+        if(pos_open == -1)
+            pos_open = i;
+    }
+}
+void check_close_brace(const std::string &new_s, int &cnt_close, int &cnt_open, int &i, Set& s, int&pos_open, int& lst){
+    if(new_s[i] == '}'){
+        cnt_close++;
+        if(cnt_open == cnt_close){
+            if(i == cnt_open+1){
+                s.add_element(Set());
+            }
+            else{
+                std::string temp_str = new_s.substr(pos_open+1, i-pos_open-1);
+                s.add_element(Set("{"+temp_str+"}"));
+            }
+            pos_open = -1;
+            cnt_open = cnt_close = 0;
+            lst = i+1;
+            i++;
+        }
+    }
+}
 Set::Set() = default;
 Set::Set(const std::string& s){
         if(s.empty() || s[0] != '{' || s[s.size()-1] != '}' || !is_balanced_braces(s))
@@ -30,35 +65,14 @@ Set::Set(const std::string& s){
         int lst = 0, cnt_open = 0, cnt_close = 0, pos_open = -1;
         new_s[new_s.size()-1] =',';
         for(int i = 1; i < new_s.size(); i++){
-            if(new_s[i] == ',' && cnt_open == 0){
-                if(i == lst+1){
-                    throw std::invalid_argument("Неверный формат строки\n");
-                }
-                std::string temp_str = new_s.substr(lst+1, i-lst-1);
-                this->add_element(temp_str);
-                lst=i;
+            try{
+                check_comma(lst, *this, new_s, i, cnt_open);
             }
-            if(new_s[i] == '{'){
-                cnt_open++;
-                if(pos_open == -1)
-                    pos_open = i;
+            catch (const std::exception& e){
+                throw e;
             }
-            if(new_s[i] == '}'){
-                cnt_close++;
-                if(cnt_open == cnt_close){
-                    if(i == cnt_open+1){
-                        this->add_element(Set());
-                    }
-                    else{
-                        std::string temp_str = new_s.substr(pos_open+1, i-pos_open-1);
-                        this->add_element(Set("{"+temp_str+"}"));
-                    }
-                    pos_open = -1;
-                    cnt_open = cnt_close = 0;
-                    lst = i+1;
-                    i++;
-                }
-            }
+            check_open_brace(new_s, i, cnt_open, pos_open);
+            check_close_brace(new_s, cnt_close, cnt_open, i, *this, pos_open, lst);
         }
 }
 

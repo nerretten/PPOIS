@@ -7,6 +7,7 @@
 
 bool is_balanced_braces(const std::string&s);
 
+
 class Set{
 private:
     std::vector <std::string> items;
@@ -45,4 +46,8 @@ public:
     friend std::istream& operator>>(std::istream& os, Set& s);
 
 };
+
+void check_comma(int& lst, Set &s, const std::string& new_s, int i, int cnt_open);
+void check_open_brace(const std::string& new_s, int i, int& cnt_open, int &pos_open);
+void check_close_brace(const std::string& new_s, int &cnt_close, int &cnt_open, int &i, Set& s, int&pos_open, int& lst);
 #endif
