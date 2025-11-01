@@ -1,16 +1,30 @@
 #include "Part.h"
+#include "../exceptions.h"
+#include <iostream>
 
-Part::Part(const std::string& name, double price, const std::string& manufacturer):
-        name(name), price(price), manufacturer(manufacturer){}
-const std::string& Part::get_name() const{return name;}
-double Part::get_price() const{ return price;}
-const std::string& Part::get_manufacturer() const {return manufacturer;}
-void Part::set_name(const std::string& s){
-    name = s;
+Part::Part(std::string id, std::string name, double price, int qty)
+        : id(id), name(name), price(price), quantityInStock(qty) {}
+
+void Part::setQuantity(int qty) {
+    quantityInStock = qty;
 }
-void Part::set_price(double x){
-    price = x;
+
+int Part::getQuantity() const {
+    return quantityInStock;
 }
-void Part::set_manufacturer(const std::string& s){
-    manufacturer = s;
+
+double Part::getPrice() const {
+    return price;
+}
+
+std::string Part::getName() const {
+    return name;
+}
+
+void Part::use(int qtyUsed){
+    if (quantityInStock < qtyUsed) {
+        throw PartNotInStockException("Not enough parts in stock: " + name);
+    }
+    quantityInStock -= qtyUsed;
+    std::cout << "Used " << qtyUsed << " of part: " << name << std::endl;
 }

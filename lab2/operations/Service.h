@@ -1,20 +1,19 @@
-#ifndef LAB2_SERVICE_H
-#define LAB2_SERVICE_H
+#ifndef SERVICE_H
+#define SERVICE_H
+
 #include <string>
 
-class Service{
-private:
-    std::string name;
-    double base_price;
-    int estimated_minutes;
+class Service {
+protected:
+    std::string description;
+    bool isCompleted;
+
 public:
-    Service(const std::string& name, double base_price, int estimated_minutes);
-    const std::string& get_name() const;
-    double get_base_price() const;
-    int get_estimated_minutes() const;
-    void set_name(const std::string& s);
-    void set_base_price(double x);
-    void set_estimated_minutes(int x);
+    Service(std::string desc);
+    virtual void perform() = 0;
+    virtual void schedule() = 0;
+    bool getIsCompleted() const;
+    std::string getDescription() const;
 };
 
-#endif
+#endif // SERVICE_H

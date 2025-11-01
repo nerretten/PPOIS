@@ -1,22 +1,36 @@
 #include "Mechanic.h"
+#include <iostream>
 
-Mechanic::Mechanic(const std::string& name, const std::string& specialization, int experiance_years):
-        name(name), specialization(specialization), experiance_years(experiance_years){}
-const std::string& Mechanic::get_name() const{ return name;}
-const std::string& Mechanic::get_specialization() const{ return specialization; }
-const int Mechanic::get_experiance_years() const { return experiance_years; }
-void Mechanic::set_name(const std::string& s){
-    name = s;
-}
-void Mechanic::set_specialization(const std::string& s){
-    specialization = s;
-}
-void Mechanic::set_experiance_years(int x){
-    experiance_years = x;
+Mechanic::Mechanic(std::string name, std::string spec, int exp)
+        : name(name), specialty(spec), yearsExperience(exp), isAvailable(true) {}
+
+void Mechanic::assignToJob(std::string jobDescription) {
+    if (!isAvailable) {
+        std::cout << "Mechanic " << name << " is not available." << std::endl;
+        return;
+    }
+    std::cout << "Mechanic " << name << " assigned to: " << jobDescription << std::endl;
+    isAvailable = false;
 }
 
-void Mechanic::use_tool(Tool &t) {
-    if(!t.get_is_available())
-        throw ToolUnavailableException();
-    t.use();
+void Mechanic::completeJob() {
+    isAvailable = true;
+    std::cout << "Mechanic " << name << " completed the job." << std::endl;
+}
+
+void Mechanic::takeBreak() {
+    isAvailable = false;
+    std::cout << "Mechanic " << name << " is on break." << std::endl;
+}
+
+std::string Mechanic::getName() const {
+    return name;
+}
+
+std::string Mechanic::getSpecialty() const {
+    return specialty;
+}
+
+bool Mechanic::getIsAvailable() const {
+    return isAvailable;
 }

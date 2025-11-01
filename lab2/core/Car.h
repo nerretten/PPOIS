@@ -1,26 +1,44 @@
-#ifndef LAB2_CAR_H
-#define LAB2_CAR_H
+#ifndef CAR_H
+#define CAR_H
+
+#include "Engine.h"
+#include "Transmission.h"
+#include "Battery.h"
+#include "BrakeSystem.h"
+#include "Suspension.h"
+#include "Tire.h"
+#include "SteeringWheel.h"
+#include "Headlight.h"
+#include "Radiator.h"
+#include "ExhaustSystem.h"
 #include <string>
 
-
-class Car{
+class Car {
 private:
-    std::string make;
+    std::string vin;
     std::string model;
     int year;
-    std::string vin;
+    Engine engine;
+    Transmission transmission;
+    Battery battery;
+    BrakeSystem brakes;
+    Suspension suspension;
+    Tire tires[4];
+    SteeringWheel steering;
+    Headlight headlights[2];
+    Radiator radiator;
+    ExhaustSystem exhaust;
+
 public:
-    Car();
-    Car(const std::string &make, const std::string &model, int year, const std::string &vin);
-    const std::string& get_make() const;
-    const std::string& get_model () const;
-    const std::string& get_vin() const;
-    int get_year () const;
-    void set_make(const std::string &s);
-    void set_model(const std::string &s);
-    void set_vin(const std::string &s);
-    void set_year(int x);
-    void validate() const;
+    Car(std::string vin, std::string model, int year);
+    void startEngine();
+    void stopEngine();
+    void drive();
+    void brake();
+    void turnLeft();
+    void turnRight();
+    std::string getVin() const;
+    std::string getModel() const;
 };
 
-#endif
+#endif // CAR_H

@@ -1,21 +1,20 @@
-#ifndef LAB2_ENGINE_H
-#define LAB2_ENGINE_H
+#ifndef ENGINE_H
+#define ENGINE_H
+
 #include <string>
 
-class Engine{
+class Engine {
 private:
-    double displacement;
-    std::string fuel_type;
-    int horse_power;
+    std::string type;
+    int horsepower;
+    bool isRunning;
+
 public:
-    Engine(double displacement, const std::string& fuel_type, int horse_power);
-    double get_displacement() const;
-    const std::string& get_fuel_type() const;
-    int get_horse_power() const;
-    void set_displacement(double x);
-    void set_fuel_type(const std::string& s);
-    void set_horse_power(int x);
+    Engine(std::string t, int hp);
+    void start();
+    void stop();
+    bool getIsRunning() const;
+    int getHorsepower() const;
 };
 
-
-#endif
+#endif // ENGINE_H

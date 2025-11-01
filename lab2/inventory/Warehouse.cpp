@@ -1,20 +1,48 @@
 #include "Warehouse.h"
+#include "../exceptions.h"
+#include <iostream>
+#include <algorithm>
 
-void Warehouse::add_part(const Part& part){
-    inventory.push_back(part);
+Warehouse::Warehouse(std::string loc) : location(loc) {}
+
+void Warehouse::addPart(Part* part) {
+    parts.push_back(part);
 }
-int Warehouse::get_part_count() const{
-    return inventory.size();
+
+void Warehouse::addTool(Tool* tool) {
+    tools.push_back(tool);
 }
-void Warehouse::remove_part_by_name(const std::string& s){
-    if(inventory.empty()){
-        throw WarehouseEmptyException();
-    }
-    for(auto it = inventory.begin(); it  != inventory.end(); it++){
-        if(it->get_name() == s) {
-            inventory.erase(it);
-            return;
+
+Part* Warehouse::findPartById(std::string id){
+    for (Part* p : parts) {
+        if (p->getName() == id) {
+            return p;
         }
     }
-    throw PartNotFound();
+    throw AccountNotFoundException("Part not found: " + id);
+}
+
+Tool* Warehouse::findToolById(std::string id){
+    for (Tool* t : tools) {
+        if (t->getName() == id) {
+            return t;
+        }
+    }
+    throw AccountNotFoundException("Tool not found: " + id);
+}
+
+void Warehouse::listInventory() const {
+    std::cout << "=== Warehouse Inventory ===" << std::endl;
+    std::cout << "Parts:" << std::endl;
+    for (const Part* p : parts) {
+        std::cout << "  " << p->getName() << " (Qty: " << p->getQuantity() << ")" << std::endl;
+    }
+    std::cout << "Tools:" << std::endl;
+    for (const Tool* t : tools) {
+        std::cout << "  " << t->getName() << " (Available: " << (t->getIsAvailable() ? "Yes" : "No") << ")" << std::endl;
+    }
+}
+
+std::vector<Part*> Warehouse::getParts() const{
+    return parts;
 }

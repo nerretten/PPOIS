@@ -1,36 +1,61 @@
 #include "Car.h"
-#include "../exceptions.h"
+#include <iostream>
 
-Car::Car() = default;
-Car::Car(const std::string &make, const std::string &model, int year, const std::string &vin):
-        make(make), model(model), year(year), vin(vin) {}
+Car::Car(std::string vin, std::string model, int year)
+        : vin(vin), model(model), year(year),
+          engine("V8", 350),
+          transmission("Automatic"),
+          battery("BATT001", 12, 60),
+          brakes("disc", 10.0),
+          suspension("Independent"),
+          steering("Electric"),
+          radiator("RADIATOR001", 10.0),
+          exhaust("EXHAUST001", "Stainless Steel")
+{
+    for (int i = 0; i < 4; ++i) {
+        tires[i] = Tire("TIRE" + std::to_string(i+1), "Summer", 225, 45);
+    }
+    headlights[0] = Headlight("HEADLIGHT_LEFT", "LED");
+    headlights[1] = Headlight("HEADLIGHT_RIGHT", "LED");
+}
 
-const std::string& Car::get_make() const{
-    return make;
+void Car::startEngine() {
+    engine.start();
+    std::cout << "Car engine started." << std::endl;
 }
-const std::string& Car::get_model () const{
-    return model;
+
+void Car::stopEngine() {
+    engine.stop();
+    std::cout << "Car engine stopped." << std::endl;
 }
-const std::string& Car::get_vin() const{
+
+void Car::drive() {
+    std::cout << "Car is driving." << std::endl;
+}
+
+void Car::brake() {
+    brakes.inspect();
+    if (!brakes.getIsFunctional()) {
+        std::cout << "Brakes need replacement!" << std::endl;
+    } else {
+        std::cout << "Braking..." << std::endl;
+    }
+}
+
+void Car::turnLeft() {
+    steering.turnLeft();
+    std::cout << "Turning left." << std::endl;
+}
+
+void Car::turnRight() {
+    steering.turnRight();
+    std::cout << "Turning right." << std::endl;
+}
+
+std::string Car::getVin() const {
     return vin;
 }
-int Car::get_year() const{
-    return year;
-}
-void Car::set_make(const std::string &s){
-    make = s;
-}
-void Car::set_model(const std::string &s){
-    model = s;
-}
-void Car::set_vin(const std::string &s){
-    vin = s;
-}
-void Car::set_year(int x){
-    year = x;
-}
-void Car::validate() const{
-    if(vin.empty() || year>2025 || year < 1900){
-        throw InvalidCarException();
-    }
+
+std::string Car::getModel() const {
+    return model;
 }

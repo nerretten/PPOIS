@@ -1,17 +1,21 @@
-#ifndef LAB2_TOOL_H
-#define LAB2_TOOL_H
+#ifndef TOOL_H
+#define TOOL_H
+
 #include <string>
 
-class Tool{
+class Tool {
 private:
+    std::string id;
     std::string name;
-    bool is_available;
+    std::string type;
+    bool isAvailable;
+
 public:
-    Tool(const std::string& name);
-    void use();
-    void return_tool();
-    bool get_is_available() const;
+    Tool(std::string id, std::string name, std::string type);
+    void borrow();
+    void returnTool();
+    bool getIsAvailable() const;
+    std::string getName() const;
 };
 
-
-#endif
+#endif // TOOL_H

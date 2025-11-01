@@ -1,20 +1,22 @@
-#ifndef LAB2_PART_H
-#define LAB2_PART_H
+#ifndef PART_H
+#define PART_H
+
 #include <string>
 
-class Part{
+class Part {
 private:
+    std::string id;
     std::string name;
     double price;
-    std::string manufacturer;
+    int quantityInStock;
+
 public:
-    Part(const std::string& name, double price, const std::string& manufacturer);
-    const std::string& get_name() const;
-    double get_price() const;
-    const std::string& get_manufacturer() const;
-    void set_name(const std::string& s);
-    void set_price(double x);
-    void set_manufacturer(const std::string& s);
+    Part(std::string id, std::string name, double price, int qty = 0);
+    void setQuantity(int qty);
+    int getQuantity() const;
+    double getPrice() const;
+    std::string getName() const;
+    void use(int qtyUsed);
 };
 
-#endif
+#endif // PART_H

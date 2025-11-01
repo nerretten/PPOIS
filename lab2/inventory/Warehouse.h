@@ -1,16 +1,25 @@
-#ifndef LAB2_WAREHOUSE_H
-#define LAB2_WAREHOUSE_H
-#include <vector>
-#include "../exceptions.h"
-#include "Part.h"
+#ifndef WAREHOUSE_H
+#define WAREHOUSE_H
 
-class Warehouse{
+#include <string>
+#include <vector>
+#include "Part.h"
+#include "Tool.h"
+
+class Warehouse {
 private:
-    std::vector <Part> inventory;
+    std::string location;
+    std::vector<class Part*> parts;
+    std::vector<class Tool*> tools;
+
 public:
-    void add_part(const Part& part);
-    int get_part_count() const;
-    void remove_part_by_name(const std::string& s);
+    Warehouse(std::string loc);
+    void addPart(Part* part);
+    void addTool(Tool* tool);
+    Part* findPartById(std::string id);
+    Tool* findToolById(std::string id);
+    void listInventory() const;
+    std::vector<Part*> getParts() const;
 };
 
-#endif
+#endif // WAREHOUSE_H

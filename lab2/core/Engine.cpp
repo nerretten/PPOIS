@@ -1,22 +1,23 @@
 #include "Engine.h"
+#include <iostream>
 
-Engine::Engine(double displacement, const std::string& fuel_type, int horse_power):
-        displacement(displacement), fuel_type(fuel_type), horse_power(horse_power){}
-double Engine::get_displacement() const{
-    return displacement;
+Engine::Engine(std::string t, int hp)
+        : type(t), horsepower(hp), isRunning(false) {}
+
+void Engine::start() {
+    isRunning = true;
+    std::cout << "Engine started." << std::endl;
 }
-const std::string& Engine::get_fuel_type() const{
-    return fuel_type;
+
+void Engine::stop() {
+    isRunning = false;
+    std::cout << "Engine stopped." << std::endl;
 }
-int Engine::get_horse_power() const{
-    return horse_power;
+
+bool Engine::getIsRunning() const {
+    return isRunning;
 }
-void Engine::set_displacement(double x){
-    displacement = x;
-}
-void Engine::set_fuel_type(const std::string& s){
-    fuel_type = s;
-}
-void Engine::set_horse_power(int x){
-    horse_power = x;
+
+int Engine::getHorsepower() const {
+    return horsepower;
 }

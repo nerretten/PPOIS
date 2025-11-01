@@ -1,15 +1,53 @@
 #include "ServiceOrder.h"
+#include <iostream>
 
-ServiceOrder::ServiceOrder(int orderId, const Car& car) : orderId(orderId), car(car){}
-void ServiceOrder::addPart(const Part& part){
-    parts.push_back(part);
+ServiceOrder::ServiceOrder(std::string id, Date date)
+        : orderId(id), orderDate(date), assignedMechanic(nullptr), status("Pending") {}
+
+void ServiceOrder::addService(Service* service) {
+    services.push_back(service);
 }
-void ServiceOrder::assign_mechanic(const Mechanic& mechanic){
-    assigned_mechanics.push_back(mechanic);
+
+void ServiceOrder::assignMechanic(Mechanic* mech) {
+    assignedMechanic = mech;
+    if (mech) {
+        mech->assignToJob("Service Order " + orderId);
+    }
 }
-double ServiceOrder::calculate_total_cost() const{
-    double sum = 0.0;
-    for(const auto& part: parts)
-        sum+=part.get_price();
-    return sum;
+
+void ServiceOrder::complete() {
+    status = "Completed";
+    if (assignedMechanic) {
+        assignedMechanic->completeJob();
+    }
+    for (Service* s : services) {
+        s->perform();
+    }
+    std::cout << "Service order " << orderId << " completed." << std::endl;
+}
+
+void ServiceOrder::printOrder() const {
+    std::cout << "=== Service Order ===" << std::endl;
+    std::cout << "ID: " << orderId << std::endl;
+    std::cout << "Date: " << orderDate.toString() << std::endl;
+    std::cout << "Status: " << status << std::endl;
+    if (assignedMechanic) {
+        std::cout << "Assigned Mechanic: " << assignedMechanic->getName() << std::endl;
+    }
+    std::cout << "Services:" << std::endl;
+    for (const Service* s : services) {
+        std::cout << "  - " << s->getDescription() << std::endl;
+    }
+}
+
+std::string ServiceOrder::getOrderId() const {
+    return orderId;
+}
+
+std::vector<Service*> ServiceOrder::getServices() const {
+    return services;
+}
+
+Date ServiceOrder::getDate() const{
+    return orderDate;
 }

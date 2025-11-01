@@ -1,23 +1,29 @@
-#ifndef LAB2_SERVICEORDER_H
-#define LAB2_SERVICEORDER_H
-#include <vector>
-#include "../core/Car.h"
+#ifndef SERVICEORDER_H
+#define SERVICEORDER_H
+
+#include "Service.h"
 #include "../employees/Mechanic.h"
-#include "../inventory/Part.h"
+#include "../utilities/Date.h"
+#include <string>
+#include <vector>
 
-
-class ServiceOrder{
+class ServiceOrder {
 private:
-    int orderId;
-    Car car;
-    std::vector<Part> parts;
-    std::vector<Mechanic> assigned_mechanics;
+    std::string orderId;
+    Date orderDate;
+    std::vector<Service*> services;
+    Mechanic* assignedMechanic;
+    std::string status;
+
 public:
-    ServiceOrder(int orderId, const Car& car);
-    void addPart(const Part& part);
-    void assign_mechanic(const Mechanic& mechanic);
-    double calculate_total_cost() const;
+    ServiceOrder(std::string id, Date date);
+    void addService(Service* service);
+    void assignMechanic(Mechanic* mech);
+    void complete();
+    void printOrder() const;
+    std::string getOrderId() const;
+    std::vector<Service*> getServices() const;
+    Date getDate() const;
 };
 
-
-#endif
+#endif // SERVICEORDER_H
