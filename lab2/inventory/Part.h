@@ -1,22 +1,15 @@
 #ifndef PART_H
 #define PART_H
-
 #include <string>
-
 class Part {
 private:
-    std::string id;
+    std::string sku;
     std::string name;
-    double price;
-    int quantityInStock;
-
+    double unitPrice;
 public:
-    Part(std::string id, std::string name, double price, int qty = 0);
-    void setQuantity(int qty);
-    int getQuantity() const;
-    double getPrice() const;
-    std::string getName() const;
-    void use(int qtyUsed);
+    Part(const std::string &sku_, const std::string &name_, double price);
+    double priceWithTax(double taxRate) const;
+    bool isCompatibleWith(const std::string &model) const;
 };
+#endif
 
-#endif // PART_H

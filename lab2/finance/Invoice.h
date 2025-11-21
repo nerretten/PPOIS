@@ -1,26 +1,26 @@
 #ifndef INVOICE_H
 #define INVOICE_H
-
-#include "../utilities/Date.h"
-#include "../operations/ServiceOrder.h"
 #include <string>
+#include "../service/RepairOrder.h"
+#include <sstream>
+#include <stdexcept>
+#include <iomanip>
+
+class RepairOrder;
 
 class Invoice {
 private:
-    std::string invoiceId;
-    Date issueDate;
-    Date dueDate;
-    double totalAmount;
-    bool paid;
-    ServiceOrder* relatedOrder;
-
+    int invoiceNo;
+    RepairOrder* order;
+    double paidAmount;
 public:
-    Invoice(std::string id, Date issue, Date due, double amount, ServiceOrder* order);
-    void markAsPaid();
-    bool isOverdue() const;
-    double getRemainingBalance() const;
-    std::string getInvoiceId() const;
-    double getTotalAmount() const;
+    Invoice(int no, RepairOrder* o);
+    double calculateTotal() const;
+    void applyPayment(double amount);
+    std::string summary() const;
+    bool isPaid() const;
 };
 
-#endif // INVOICE_H
+#endif
+
+

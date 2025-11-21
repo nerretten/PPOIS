@@ -1,27 +1,38 @@
 #include "Invoice.h"
-#include <iostream>
 
-Invoice::Invoice(std::string id, Date issue, Date due, double amount, ServiceOrder* order)
-        : invoiceId(id), issueDate(issue), dueDate(due), totalAmount(amount), paid(false), relatedOrder(order) {}
-
-void Invoice::markAsPaid() {
-    paid = true;
-    std::cout << "Invoice " << invoiceId << " marked as paid." << std::endl;
+Invoice::Invoice(int no, RepairOrder* o)
+        : invoiceNo(no), order(o), paidAmount(0.0) {
+    if (!o) {
+        throw std::invalid_argument("RepairOrder cannot be null");
+    }
 }
 
-bool Invoice::isOverdue() const {
-    Date today(2025, 10, 29);
-    return dueDate < today && !paid;
+double Invoice::calculateTotal() const {
+    return order ? order->totalCost() : 0.0;
 }
 
-double Invoice::getRemainingBalance() const {
-    return paid ? 0.0 : totalAmount;
+bool Invoice::isPaid() const {
+    return paidAmount >= calculateTotal();
 }
 
-std::string Invoice::getInvoiceId() const {
-    return invoiceId;
+void Invoice::applyPayment(double amount) {
+    if (amount <= 0.0) {
+        throw std::invalid_argument("Payment amount must be positive");
+    }
+    if (isPaid()) {
+        throw std::logic_error("Invoice already paid in full");
+    }
+    paidAmount += amount;
+    if (isPaid()) {
+        order->markPaid();
+    }
 }
 
-double Invoice::getTotalAmount() const {
-    return totalAmount;
+std::string Invoice::summary() const {
+    std::ostringstream ss;
+    ss << "Invoice #" << invoiceNo
+       << " | Total: $" << std::fixed << std::setprecision(2) << calculateTotal()
+       << " | Paid: $" << std::fixed << std::setprecision(2) << paidAmount
+       << " | Status: " << (isPaid() ? "PAID" : "PENDING");
+    return ss.str();
 }
