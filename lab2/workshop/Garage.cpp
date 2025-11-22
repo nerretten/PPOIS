@@ -19,7 +19,8 @@ bool Garage::parkVehicle(Bay* b, Vehicle* v) {
             break;
         }
     }
-    if (!bayExists) return false;
+    if (!bayExists)
+        return false;
 
     b->assignVehicle(v);
     return true;
