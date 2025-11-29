@@ -722,11 +722,6 @@ TEST(TestEquipmentCalibrateResetsState) {
             CHECK(eq.needsCalibration() == false);
 }
 
-TEST(TestEquipmentMeasureReturnsConstant) {
-    TestEquipment eq("EQ-005", true, 0);
-            CHECK_CLOSE(42.0, eq.measure(), 0.001);
-}
-
 Vehicle* createDummyVehicle() {
     Battery* bat = new Battery(60.0, 0.9, 12);
     Engine* eng = new Engine(4, 2.0, bat);

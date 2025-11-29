@@ -8,7 +8,4 @@ void TestEquipment::calibrate(){
 bool TestEquipment::needsCalibration() const {
     return !calibrated || lastCalibrationDays > 365;
 }
-double TestEquipment::measure(){
-    return 42.0;
-}
 

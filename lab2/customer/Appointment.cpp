@@ -50,8 +50,10 @@ bool Appointment::isValidDateTime(const std::string& dt) {
     int hour = std::stoi(dt.substr(11, 2));
     int minute = std::stoi(dt.substr(14, 2));
 
-    if (year < 2020 || month < 1 || month > 12 || day < 1 || day > 31) return false;
-    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return false;
+    if (year < 2025 || month < 1 || month > 12 || day < 1 || day > 31)
+        return false;
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59)
+        return false;
 
     return true;
 }
