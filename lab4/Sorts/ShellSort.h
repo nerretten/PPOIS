@@ -1,35 +1,37 @@
 #include <iterator>
 
-template <typename RandomIt>
-void ShellSort(RandomIt first, RandomIt last) {
-    if (first >= last)
-        return;
+class ShellSorter {
+private:
+    template <typename RandomIt>
+    static void sort_implementation(RandomIt first, RandomIt last) {
+        if (first >= last)
+            return;
 
-    auto n = last - first;
+        auto n = last - first;
 
-    for (auto gap = n / 2; gap > 0; gap /= 2) {
-        for (auto i = gap; i < n; ++i) {
-            auto temp = *(first + i);
-            auto j = i;
+        for (auto gap = n / 2; gap > 0; gap /= 2) {
+            for (auto i = gap; i < n; ++i) {
+                auto temp = *(first + i);
+                auto j = i;
 
-            while (j >= gap && temp < *(first + j - gap)) {
-                *(first + j) = *(first + j - gap);
-                j -= gap;
+                while (j >= gap && temp < *(first + j - gap)) {
+                    *(first + j) = *(first + j - gap);
+                    j -= gap;
+                }
+                *(first + j) = temp;
             }
-            *(first + j) = temp;
         }
     }
-}
+public:
+    template <typename T>
+    static void sort(std::vector<T>& vec) {
+        sort_implementation(vec.begin(), vec.end());
+    }
 
-template<typename T>
-void ShellSort(std::vector<T>& vec) {
-    ShellSort(vec.begin(), vec.end());
-}
+    template <typename T, size_t N>
+    static void sort(T (&arr)[N]) {
+        sort_implementation(std::begin(arr), std::end(arr));
+    }
 
-template<typename T, size_t N>
-void ShellSort(T (&arr)[N]) {
-    ShellSort(std::begin(arr), std::end(arr));
-}
-
-
+};
 

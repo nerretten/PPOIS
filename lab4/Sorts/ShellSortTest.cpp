@@ -24,7 +24,7 @@ TEST(ShellSort_Array) {
         int arr[] = {64, 34, 25, 12, 22, 11, 90};
         const size_t N = sizeof(arr) / sizeof(arr[0]);
 
-        ShellSort(arr);
+        ShellSorter::sort(arr);
 
         CHECK(my_is_sorted(std::begin(arr), std::end(arr)));
 
@@ -39,7 +39,7 @@ TEST(ShellSort_VectorInt) {
         std::vector<int> vec = {5, 2, 9, 1, 5, 6};
         std::vector<int> expected = {1, 2, 5, 5, 6, 9};
 
-        ShellSort(vec);
+        ShellSorter::sort(vec);
 
         CHECK(is_sorted(vec.begin(), vec.end()));
         CHECK_ARRAY_EQUAL(expected.data(), vec.data(), vec.size());
@@ -61,7 +61,7 @@ TEST(ShellSort_VectorPerson) {
             {"Charlie", 30}
         };
 
-        ShellSort(people);
+        ShellSorter::sort(people);
 
         CHECK(is_sorted(people.begin(), people.end()));
         CHECK_EQUAL(expected.size(), people.size());
@@ -74,18 +74,18 @@ TEST(ShellSort_VectorPerson) {
 
 TEST(ShellSort_EmptyVector) {
         std::vector<int> vec;
-        ShellSort(vec);
+        ShellSorter::sort(vec);
         CHECK(vec.empty());
         CHECK(is_sorted(vec.begin(), vec.end()));
 }
 
 TEST(ShellSort_SingleElement) {
         int arr[] = {42};
-        ShellSort(arr);
+        ShellSorter::sort(arr);
         CHECK_EQUAL(42, arr[0]);
 
         std::vector<Person> vec = {{"Zoe", 20}};
-        ShellSort(vec);
+        ShellSorter::sort(vec);
         CHECK_EQUAL("Zoe", vec[0].name);
         CHECK_EQUAL(20, vec[0].age);
 }
@@ -93,14 +93,14 @@ TEST(ShellSort_SingleElement) {
 TEST(ShellSort_AlreadySorted) {
         std::vector<int> vec = {1, 2, 3, 4, 5};
         std::vector<int> copy = vec;
-        ShellSort(vec);
+        ShellSorter::sort(vec);
         CHECK_ARRAY_EQUAL(copy.data(), vec.data(), vec.size());
         CHECK(is_sorted(vec.begin(), vec.end()));
 }
 
 TEST(ShellSort_ReverseOrder) {
         int arr[] = {5, 4, 3, 2, 1};
-        ShellSort(arr);
+        ShellSorter::sort(arr);
         int expected[] = {1, 2, 3, 4, 5};
         CHECK_ARRAY_EQUAL(expected, arr, 5);
         CHECK(my_is_sorted(std::begin(arr), std::end(arr)));
